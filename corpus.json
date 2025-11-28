@@ -1,0 +1,18 @@
+[
+  {
+    "id": "schema_student",
+    "text": "Table: student\nColumns:\n  - student_id (INT PRIMARY KEY)\n  - name (VARCHAR)\n  - age (INT)\n  - grade (VARCHAR)\n  - city (VARCHAR)\nDescription: basic student table with id, name, age, grade and city."
+  },
+  {
+    "id": "ex1",
+    "text": "NL: List all student names and their cities.\nSQL: SELECT name, city FROM student;"
+  },
+  {
+    "id": "ex2",
+    "text": "NL: Show students older than 20.\nSQL: SELECT * FROM student WHERE age > 20;"
+  },
+  {
+    "id": "ex3",
+    "text": "NL: Get names of students with grade A.\nSQL: SELECT name FROM student WHERE grade = 'A';"
+  }
+]

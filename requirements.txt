@@ -1,0 +1,4 @@
+openai
+gradio
+python-dotenv
+sqlite-utils   # optional, but helpful if you want extra SQLite tools
