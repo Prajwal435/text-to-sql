@@ -125,15 +125,42 @@ def agent_generate(question: str):
     # Optionally we could execute; for this app we return SQL and context (execution requires DB)
     return sql, "Generated (no execution)", "\n\n".join(context)
 
+def is_valid_question(text: str):
+    """Check if text looks like a valid question/request"""
+    text = text.strip().lower()
+    # Check for minimum length
+    if len(text) < 5:
+        return False
+    
+    words = text.split()
+    if len(words) < 2:
+        return False
+    
+    # Check for random gibberish - if most words are nonsensical
+    common_words = ['student', 'students', 'show', 'list', 'get', 'find', 'select', 'count', 'name', 'names', 'age', 'grade', 'grades', 'city', 'cities', 'all', 'who', 'what', 'where', 'how', 'many', 'with', 'from', 'the', 'and', 'or', 'in', 'of', 'to', 'for', 'by', 'older', 'younger', 'than', 'equal', 'greater', 'less', 'have', 'has', 'are', 'is', 'me', 'their', 'them']
+    
+    # Count how many words are recognizable
+    recognizable_words = sum(1 for word in words if any(common in word or word in common for common in common_words))
+    
+    # If less than 30% of words are recognizable, it's likely gibberish
+    if recognizable_words / len(words) < 0.3:
+        return False
+        
+    return True
+
 # UI wrapper
 def ui_generate(question: str):
     if not question or not question.strip():
-        return "", "Please enter a natural language request.", ""
+        return "-- Please enter a natural language request.", "", ""
+    
+    if not is_valid_question(question):
+        return "-- ⚠️ Please enter a proper question", "", ""
+    
     try:
         sql, status, ctx = agent_generate(question)
         return sql, status, ctx
     except Exception as e:
-        return "", f"Error: {e}", ""
+        return f"-- Error: {e}", "", ""
 
 with gr.Blocks(title="NL to SQL Generator") as demo:
     gr.Markdown(
